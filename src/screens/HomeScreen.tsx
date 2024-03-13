@@ -1,17 +1,39 @@
-// src/screens/HomeScreen.tsx
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { CommonActions } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [location, setLocation] = useState<string | null>(null);
+  const [locationPermission, setLocationPermission] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const getLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setLocationPermission(false);
+        return;
+      }
+      
+      setLocationPermission(true);
+      try {
+        const locationData = await Location.getCurrentPositionAsync({});
+        setLocation(`Latitude: ${locationData.coords.latitude}, Longitude: ${locationData.coords.longitude}`);
+      } catch (error) {
+        console.error('Error fetching location:', error);
+        Alert.alert('Location error', 'An error occurred while fetching your location.');
+      }
+    };
+
+    getLocation();
+  }, []); // Empty dependency array ensures this effect runs only once
 
   const navigateToScreen = (screenName: string) => {
     navigation.dispatch(CommonActions.navigate({ name: screenName }));
-    // Close the drawer after navigation
     navigation.dispatch(DrawerActions.closeDrawer());
   };
 
@@ -41,6 +63,17 @@ const HomeScreen = () => {
                 </TouchableOpacity>
               ))}
             </ScrollView>
+            {locationPermission === false && (
+              <View style={styles.locationContainer}>
+                <Text>Location permission denied. Please enable location access.</Text>
+              </View>
+            )}
+            {locationPermission === true && location && (
+              <View style={styles.locationContainer}>
+                <Text>Your Location:</Text>
+                <Text>{location}</Text>
+              </View>
+            )}
           </View>
         )}
       </Drawer.Screen>
@@ -50,30 +83,8 @@ const HomeScreen = () => {
 
 const Drawer = createDrawerNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    padding: 16,
-  },
-  recommendationsCard: {
-    marginBottom: 16,
-  },
-  activityCard: {
-    marginBottom: 16,
-  },
-  participateButton: {
-    marginTop: 16,
-  },
-});
-
-export default HomeScreen;
-
-// The DrawerContent component is defined separately
 const DrawerContent = ({ activityChoices, navigate }: { activityChoices: string[], navigate: (screenName: string) => void }) => {
-return (
+  return (
     <DrawerContentScrollView>
       <DrawerItem label="Notre projet" onPress={() => navigate('AboutScreen')} />
       <DrawerItem label="Sortir de sa Zone de Confort" onPress={() => navigate('ConfortScreen')} />
@@ -84,5 +95,23 @@ return (
       ))}
     </DrawerContentScrollView>
   );
-
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    padding: 16,
+  },
+  activityCard: {
+    marginBottom: 16,
+  },
+  locationContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+});
+
+export default HomeScreen;
