@@ -1,18 +1,31 @@
-// src/screens/RankScreen.tsx
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions, TouchableOpacity } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
+import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 
 const RankScreen = ({ navigation }: { navigation: any }) => {
-  const cityData = [
-    { name: 'Quebec City', points: 300 },
-    { name: 'Montreal', points: 600 },
-    { name: 'Laval', points: 800 },
-    { name: 'Gatineau', points: 400 },
-    { name: 'Longueuil', points: 1000 },
-  ];
+  const [cityData, setCityData] = useState<{ name: string; points: number }[]>([]);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const fetchCityData = async () => {
+      try {
+        const response = await axios.get('https://points-air.ecolingui.ca/api/v1/palmares');
+        setCityData(response.data.map((city: any) => ({ name: city.ville, points: city.score })));
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start();
+      } catch (error) {
+        console.error('Error fetching city data:', error);
+      }
+    };
+
+    fetchCityData();
+  }, [fadeAnim]);
 
   const sortedCityData = cityData.slice().sort((a, b) => b.points - a.points);
 
@@ -25,16 +38,6 @@ const RankScreen = ({ navigation }: { navigation: any }) => {
     ],
   };
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }, [fadeAnim]);
-
   return (
     <Animated.View style={{ ...styles.container, opacity: fadeAnim }}>
       <Text style={styles.title}>Points Ranking Par Ville</Text>
@@ -45,7 +48,7 @@ const RankScreen = ({ navigation }: { navigation: any }) => {
           height={200}
           yAxisSuffix=" pts"
           // @ts-ignore
-           yAxisLabel=""
+          yAxisLabel=""
           chartConfig={{
             backgroundColor: '#ffffff',
             backgroundGradientFrom: '#ffffff',
