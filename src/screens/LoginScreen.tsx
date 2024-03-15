@@ -41,6 +41,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Points Air</Text> {/*PointsAir*/}
       <TextInput
         label="Username (FOR NOW, ITS THE ID IN THE API)"
         value={username}
@@ -73,6 +74,12 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
   },
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    marginBottom: 32, 
+    textAlign: 'center',
+  }
 });
 
 export default LoginScreen;

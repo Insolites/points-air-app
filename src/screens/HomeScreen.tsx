@@ -8,6 +8,7 @@ import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
 import { Marker } from "react-native-maps";
 import { Platform } from 'react-native';
+import ChooseActivityScreen from './ChooseActivityScreen';
 
 
 export let userLocation: any;
@@ -110,11 +111,13 @@ const HomeScreen = () => {
     };
   };
 
-  const navigateToScreen = (screenName: string) => {
-    navigation.dispatch(CommonActions.navigate({ name: screenName }));
+  const navigateToScreen = (screenName: string, activity?: string, coordinates?: { latitude: number, longitude: number }) => {
+    navigation.dispatch(CommonActions.navigate({ name: screenName, params: { activity, coordinates } }));
     navigation.dispatch(DrawerActions.closeDrawer());
   };
-
+  
+  
+//test
   const drawerActivities = [
     'Expérience Immersive de Randonnée',
   ];
@@ -127,7 +130,7 @@ const HomeScreen = () => {
           <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.contentContainer}>
               {apiData.map((activity: any, index: number) => (
-                <TouchableOpacity key={index} onPress={() => navigateToScreen(activity.nom)}>
+                <TouchableOpacity key={index} onPress={() => navigateToScreen('ChooseActivityScreen', activity.nom, { latitude: activity.coordinates[1], longitude: activity.coordinates[0] })}>
                   <Card style={styles.activityCard}>
                     <Card.Title title={activity.nom} />
                     <Card.Content>
@@ -162,9 +165,8 @@ const HomeScreen = () => {
             )}
             {locationPermission === true && location && (
               <View style={styles.locationContainer}>
-                <Text>Your Location:</Text>
-                <Text>{location}</Text>
-                {city && <Text>You are in {city}</Text>}
+              {/*  <Text>Votre localisation : {location}</Text>}
+                {city && <Text>Vous êtez à {city}</Text>*/}
               </View>
             )}
           </View>
@@ -178,11 +180,11 @@ const DrawerContent = ({ activityChoices, navigate }: { activityChoices: string[
   return (
     <DrawerContentScrollView>
       <DrawerItem label="Notre projet" onPress={() => navigate('AboutScreen')} />
-      <DrawerItem label="Sortir de sa Zone de Confort" onPress={() => navigate('ConfortScreen')} />
-      <DrawerItem label="Toutes les randonnees" onPress={() => navigate('CompleteScreen')} />
+      <DrawerItem label="Liste des espèces exotiques envahissantes" onPress={() => navigate('ListeEEE')} />
       <DrawerItem label="Pointage Communautaire" onPress={() => navigate('RankScreen')} />
       {activityChoices.map((activity, index) => (
-        <DrawerItem key={index} label={activity} onPress={() => navigate(activity)} />
+            // @ts-ignore
+      <DrawerItem key={index} label={activity} onPress={() => navigateToScreen('ChooseActivityScreen', activity)} />
       ))}
     </DrawerContentScrollView>
   );
@@ -206,13 +208,13 @@ const styles = StyleSheet.create({
   mapContainer: {
     alignItems: 'center',
     marginTop: 20,
-    height: 200, // Increase the height to make the map larger
-    marginHorizontal: 16, // Add margin horizontally for better spacing
+    height: 200,
+    marginHorizontal: 16, 
   },
   map: {
     width: '100%',
-    flex: 1, // Make the map fill the available space
-    borderRadius: 10, // Optional: Add border radius for a nicer appearance
+    flex: 1, 
+    borderRadius: 10, 
   },
 });
 

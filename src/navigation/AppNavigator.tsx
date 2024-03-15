@@ -14,7 +14,6 @@ const AppNavigator = () => {
       <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        {/* Add other screens as needed */}
       </Stack.Navigator>
     </NavigationContainer>
   );

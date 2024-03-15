@@ -7,7 +7,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import AboutScreen from './src/screens/AboutScreen';
 import ListeEEE from './src/screens/ListeEEE';
-import CompleteScreen from './src/screens/CompleteScreen';
+import ChooseActivityScreen from './src/screens/ChooseActivityScreen';
 import RankScreen from './src/screens/RankScreen'; 
 
 const Stack = createNativeStackNavigator();
@@ -22,7 +22,7 @@ const App = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="AboutScreen" component={AboutScreen} />
         <Stack.Screen name="ListeEEE" component={ListeEEE} /> 
-        <Stack.Screen name="CompleteScreen" component={CompleteScreen} />
+        <Stack.Screen name="ChooseActivityScreen" component={ChooseActivityScreen} />
         <Stack.Screen name="RankScreen" component={RankScreen} />
       </Stack.Navigator>
     </NavigationContainer>
