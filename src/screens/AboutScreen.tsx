@@ -1,6 +1,6 @@
 // src/screens/AboutScreen.tsx
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-paper';
 
 const AboutScreen = ({ navigation }: { navigation: any }) => {
@@ -27,6 +27,9 @@ const AboutScreen = ({ navigation }: { navigation: any }) => {
           </Card>
         </Animated.View>
       </ScrollView>
+      <TouchableOpacity style={styles.returnButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.returnButtonText}>Retour</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -48,6 +51,19 @@ const styles = StyleSheet.create({
   },
   aboutText: {
     fontSize: 16,
+  },
+  returnButton: {
+    backgroundColor: '#3498db',
+    paddingVertical: 8, 
+    paddingHorizontal: 16, 
+    borderRadius: 8,
+    alignSelf: 'center', 
+    marginTop: 16, 
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

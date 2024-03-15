@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }: { navigation: any }) => {
   const [username, setUsername] = useState('');
   const [loginError, setLoginError] = useState('');
+
+  useEffect(() => {
+    checkSavedLogin();
+  }, []);
+
+  const checkSavedLogin = async () => {
+    try {
+      const savedUsername = await AsyncStorage.getItem('username');
+      if (savedUsername) {
+        setUsername(savedUsername);
+      }
+    } catch (error) {
+      console.error('Error retrieving saved login:', error);
+    }
+  };
 
   const handleLogin = async () => {
     try {
       const response = await fetch(`https://points-air.ecolingui.ca/api/v1/user/${username}`);
       if (response.ok) {
         const userData = await response.json();
+        await AsyncStorage.setItem('username', username);
         navigation.navigate('Home', { user: userData });
       } else {
         setLoginError('Login unsuccessful. Please check your username and try again.');

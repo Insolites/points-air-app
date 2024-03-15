@@ -99,7 +99,7 @@ const fetchActivities = async (latitude: number, longitude: number) => {
                   <Card style={styles.activityCard}>
                     <Card.Title title={activity.nom} />
                     <Card.Content>
-  <Text>Sports: {Array.isArray(activity.sports) ? activity.sports.join(', ') : 'No sports available'}</Text> {/* Modified line */}
+                    <Text>Sports: {Array.isArray(activity.sports) ? activity.sports.join(', ') : 'No sports available'}</Text> {/* Modified line */}
                     </Card.Content>
                   </Card>
                 </TouchableOpacity>
