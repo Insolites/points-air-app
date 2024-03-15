@@ -28,6 +28,8 @@ npx expo start
 
 Let Metro Bundler run in its _own_ terminal. On the same terminal, Press :
 
+```bash
 "i" to open iOS simulator
 "a" to open iOS simulator
 "w" to open web
+```
