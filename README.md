@@ -1,7 +1,5 @@
 # points-air-app
 
-# Getting Started
-
 ## Step 1: Install the packages
 
 First, you will need to install the packages. 
