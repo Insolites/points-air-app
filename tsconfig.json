@@ -3,5 +3,5 @@
   "compilerOptions": {
     "strict": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/App.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "App.tsx", "react-mapfix.js"]
 }
