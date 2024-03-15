@@ -1,5 +1,9 @@
 # points-air-app
 
+# Getting Started
+
+To run the application , make sure to clone the repo on your laptop and run the api **https://github.com/Insolites/points-air-api** on your local. 
+
 ## Step 1: Install the packages
 
 First, you will need to install the packages. 
