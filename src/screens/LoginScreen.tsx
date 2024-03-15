@@ -30,6 +30,27 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
         const userData = await response.json();
         await AsyncStorage.setItem('username', username);
         navigation.navigate('Home', { user: userData });
+      } else if (response.status == 404) {
+        /* Logic to create new user here, for the moment we will simply create one! */
+        const putResponse = await fetch("https://points-air.ecolingui.ca/api/v1/user", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nom: username,
+            nom_complet: "Test User",
+            sports: ["Marche", "Vélo"],
+          })
+        });
+        if (putResponse.ok) {
+          const userData = await putResponse.json();
+          await AsyncStorage.setItem('username', username);
+          navigation.navigate('Home', { user: userData });
+        }
+        else {
+          throw `Could not create user ${username}`;
+        }
       } else {
         setLoginError('Login unsuccessful. Please check your username and try again.');
       }
@@ -43,7 +64,7 @@ const LoginScreen = ({ navigation }: { navigation: any }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Points Air</Text> {/*PointsAir*/}
       <TextInput
-        label="Username (FOR NOW, ITS THE ID IN THE API)"
+        label="Username"
         value={username}
         onChangeText={(text) => setUsername(text)}
         mode="outlined"
